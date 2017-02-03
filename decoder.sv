@@ -91,7 +91,7 @@ begin
 			3'b011: opcode = "ld";
 			3'b110: opcode = "lwu";
                 endcase
-                $display ("%x:  %x              %s      %s,%s,%d", pc , lower,opcode,rd,rs1,lower[31:20]);
+                $display ("%x:  %x              %s      %s,%s%d(%s)", pc , lower,opcode,rd,sign,temp,rs1);
         end else if (lower[6:0] == 7'b1100011) begin
                 gr_name.convert(lower[24:20],rs2);
                 gr_name.convert(lower[19:15],rs1);
@@ -115,13 +115,21 @@ begin
         end else if (lower[6:0]  == 7'b0100011) begin
                 gr_name.convert(lower[19:15],rs1);
                 gr_name.convert(lower[24:20],rs2);
-                case (lower[14:12])
+                if (lower[31] == 1'b1) begin
+                    sign = "-";
+                    temp  = - {lower[31:25],lower[11:7]};
+                end else begin
+                    temp  = {lower[31:25],lower[11:7]};
+                    sign = " ";
+                end
+                
+		case (lower[14:12])
                         3'b000: opcode = "sb";
                         3'b001: opcode = "sh";
                         3'b010: opcode = "sw";
                         3'b011: opcode = "sd";
                 endcase
-                $display ("%x:  %x              %s      %s,%s", pc, lower,opcode,rs1,rs2);
+                $display ("%x:  %x              %s      %s,%s%d,(%s)", pc, lower,opcode,rs2,sign,temp,rs1);
 
          end else if (lower[6:0] == 7'b0111011) begin
                 gr_name.convert(lower[11:7],rd);
@@ -143,6 +151,13 @@ begin
         end else if (lower[6:0] == 7'b0011011) begin
                 gr_name.convert(lower[11:7],rd);
                 gr_name.convert(lower[19:15],rs1);
+                if (lower[31] == 1'b1) begin  
+                    sign = "-";
+                    temp  = - lower[31:20];
+                end else begin
+                    temp  = lower[31:20];
+                    sign = " ";
+                end 
                 case(lower[14:12])
                         3'b000: opcode = "addiw";
                 endcase
@@ -151,7 +166,7 @@ begin
                         4'b0101: opcode = "srliw";
                         4'b1101: opcode = "sraiw";
                 endcase
-                $display ("%x:  %x              %s      %s,%s,%d", pc , lower,opcode,rd,rs1,lower[31:20]);
+                $display ("%x:  %x              %s      %s,%s,%s%d", pc , lower,opcode,rd,rs1,sign,temp);
         end else begin
               $display("unknown at this time  ");
         end
