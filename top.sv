@@ -56,10 +56,10 @@ module top
         get_decoder.decode(lower, pc + data_index*4);
         get_decoder.decode(upper, pc + (data_index + 1) * 4 );
 	data_index = data_index + 2;
-        if (upper == 32'h00008067) begin
+        if (upper == 32'h00000000) begin
           $finish;
         end
-        if (lower == 32'h00008067) begin
+        if (lower == 32'h00000000) begin
           $finish;
         end
         bus_respack <= 1;
