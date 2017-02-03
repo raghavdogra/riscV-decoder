@@ -89,8 +89,8 @@ void System::tick(int clk) {
     if (!clk) {
         if (top->bus_reqcyc) {
             // hack: blocks ACK if /any/ memory channel can't accept transaction
-            top->bus_reqack = dramsim->willAcceptTransaction();            
-            // if trnasfer is in progress, can't change mind about willAcceptTransaction()
+            top->bus_reqack = dramsim->willAcceptTransaction();
+            // if transfer is in progress, can't change mind about willAcceptTransaction()
             assert(!rx_count || top->bus_reqack); 
         }
         return;
@@ -122,9 +122,10 @@ void System::tick(int clk) {
 
     if (top->bus_reqcyc) {
         cmd = (top->bus_reqtag >> 8) & 0xf;
-        if (rx_count) {
+         if (rx_count) {
             switch(cmd) {
             case MEMORY:
+                cout << "Here";
                 *((uint64_t*)(&ram[xfer_addr + (8-rx_count)*8])) = top->bus_req;
                 break;
             case MMIO:
@@ -154,13 +155,12 @@ void System::tick(int clk) {
             rx_count = 1;
         else
             rx_count = 0;
-            
         switch(cmd) {
-        case MEMORY:
+            case MEMORY:
             xfer_addr = top->bus_req;
             assert(!(xfer_addr & 7));
             if (addr_to_tag.find(xfer_addr)!=addr_to_tag.end()) {
-                cerr << "Access for " << std::hex << xfer_addr << " already outstanding. Ignoring..." << endl;
+              //  cerr << "Access for " << std::hex << xfer_addr << " already outstanding. Ignoring..." << endl;
             } else {
                 assert(
                     dramsim->addTransaction(isWrite, xfer_addr)
