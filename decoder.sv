@@ -11,6 +11,7 @@ logic [7:0] sign;
 logic [11:0] temp;
 logic [12:0] temp_addr;
 logic [63:0] address;
+logic [20:0] offset;
 begin
          if (lower[6:0] == 7'b0110011) begin
                 gr_name.convert(lower[11:7],rd);
@@ -168,7 +169,40 @@ begin
                 endcase
                 $display ("%x:  %x              %s      %s,%s,%s%d", pc , lower,opcode,rd,rs1,sign,temp);
         end else begin
-              $display("unknown at this time  ");
+                case (lower[6:0])
+                       7'b0110111: begin
+                       gr_name.convert(lower[11:7],rd);
+                       $display("%x:  %x                  %s      %s,0x%x",pc,lower,"lui",rd,lower[31:12]);
+                       end
+                       7'b0010111:  begin
+                       gr_name.convert(lower[11:7],rd);
+                       $display("%x:  %x                  %s      %s,0x%x",pc,lower,"auipc",rd,lower[31:12]);
+                       end
+                       7'b1101111: begin
+                       gr_name.convert(lower[11:7],rd);
+                       offset[20:0] = {lower[31],lower[19:12],lower[20],lower[30:21],1'b0};
+                       if(offset[20] == 1'b1) begin 
+                           offset = - offset;
+                           address = pc - offset;
+                       end else begin
+                           address = pc + offset;
+                       end
+                       $display ("%x:  %x              %s      %s,%x", pc , lower,"jal",rd,address);
+                       end
+                       7'b1100111: begin
+                           gr_name.convert(lower[11:7],rd);
+                           gr_name.convert(lower[19:15],rs1);
+                           if (lower[31] == 1'b1) begin
+                              sign = "-";
+                              temp  = - lower[31:20];
+                           end else begin
+                              temp  = lower[31:20];
+                              sign = " ";
+                           end
+                       $display ("%x:  %x              %s      %s,%s,%s%d", pc , lower,"jalr",rd,rs1,sign,temp);
+                       end
+                       default: $display("unknown at this time  ");
+             endcase
         end
      end
     endtask
