@@ -8,11 +8,13 @@ input [63:0] pc;
 logic [32:0] rd,rs1,rs2;
 logic [64:0] opcode;
 logic [7:0] sign;
-logic [11:0] temp;
-logic [12:0] temp_addr;
-logic [63:0] address;
-logic [20:0] offset;
+logic signed [11:0] temp;
+logic signed [12:0] temp_addr;
+logic signed [64:0] address;
+logic signed [64:0] pcint;
+logic signed [20:0] offset;
 begin
+pcint = pc;
          if (lower[6:0] == 7'b0110011) begin
                 gr_name.convert(lower[11:7],rd);
                 gr_name.convert(lower[19:15],rs1);
@@ -41,13 +43,7 @@ begin
         end else if (lower[6:0] == 7'b0010011) begin
                 gr_name.convert(lower[11:7],rd);
                 gr_name.convert(lower[19:15],rs1);
-                if (lower[31] == 1'b1) begin  
-                    sign = "-";
-                    temp  = - lower[31:20];
-                end else begin
-                    temp  = lower[31:20];
-                    sign = " ";
-                end 
+                temp = lower[31:20]; 
                 case(lower[14:12])
                         3'b000: opcode = "addi";
                         3'b010: opcode = "slti";
@@ -61,7 +57,8 @@ begin
                         4'b0101: opcode = "srli";
                         4'b1101: opcode = "srai";
                 endcase
-                $display ("%x:  %x              %s      %s,%s,%s%d", pc , lower,opcode,rd,rs1,sign,temp);
+                  $display ("%x:  %x              %s      %s,%s,%d", pc , lower,opcode,rd,rs1,temp);
+
         end else if (lower[6:0] == 7'b1110011) begin
                 gr_name.convert(lower[11:7],rd);
                 gr_name.convert(lower[19:15],rs1);
@@ -76,13 +73,7 @@ begin
         end else if (lower[6:0] == 7'b0000011) begin
                 gr_name.convert(lower[11:7],rd);
                 gr_name.convert(lower[19:15],rs1);
-                if (lower[31] == 1'b1) begin
-                    sign = "-";
-                    temp  = - lower[31:20];
-                end else begin
-                    temp  = lower[31:20];
-                    sign = " ";
-                end
+                temp = lower[31:20];
                 case (lower[14:12])
                         3'b000: opcode = "lb";
                         3'b001: opcode = "lh";
@@ -92,18 +83,12 @@ begin
 			3'b011: opcode = "ld";
 			3'b110: opcode = "lwu";
                 endcase
-                $display ("%x:  %x              %s      %s,%s%d(%s)", pc , lower,opcode,rd,sign,temp,rs1);
+                $display ("%x:  %x              %s      %s,%d(%s)", pc , lower,opcode,rd,temp,rs1);
         end else if (lower[6:0] == 7'b1100011) begin
                 gr_name.convert(lower[24:20],rs2);
                 gr_name.convert(lower[19:15],rs1);
-                temp_addr = {lower[12],lower[7],lower[10:5],lower[4:1],1'b0};
-                if (lower[31] == 1'b1) begin
-                    temp_addr = - temp_addr;
-                    address  = pc  - temp_addr;
-                end else begin
-                    address = pc + temp_addr;
-                end 
-               
+                temp_addr = {lower[31],lower[7],lower[30:25],lower[11:8],1'b0}; 
+                address = pcint + temp_addr;
                 case (lower[14:12])
                         3'b000: opcode = "beq";
                         3'b001: opcode = "bne";
@@ -116,21 +101,14 @@ begin
         end else if (lower[6:0]  == 7'b0100011) begin
                 gr_name.convert(lower[19:15],rs1);
                 gr_name.convert(lower[24:20],rs2);
-                if (lower[31] == 1'b1) begin
-                    sign = "-";
-                    temp  = - {lower[31:25],lower[11:7]};
-                end else begin
-                    temp  = {lower[31:25],lower[11:7]};
-                    sign = " ";
-                end
-                
+                temp = {lower[31:25],lower[11:7]}; 
 		case (lower[14:12])
                         3'b000: opcode = "sb";
                         3'b001: opcode = "sh";
                         3'b010: opcode = "sw";
                         3'b011: opcode = "sd";
                 endcase
-                $display ("%x:  %x              %s      %s,%s%d,(%s)", pc, lower,opcode,rs2,sign,temp,rs1);
+                $display ("%x:  %x              %s      %s,%d,(%s)", pc, lower,opcode,rs2,temp,rs1);
 
          end else if (lower[6:0] == 7'b0111011) begin
                 gr_name.convert(lower[11:7],rd);
@@ -152,13 +130,7 @@ begin
         end else if (lower[6:0] == 7'b0011011) begin
                 gr_name.convert(lower[11:7],rd);
                 gr_name.convert(lower[19:15],rs1);
-                if (lower[31] == 1'b1) begin  
-                    sign = "-";
-                    temp  = - lower[31:20];
-                end else begin
-                    temp  = lower[31:20];
-                    sign = " ";
-                end 
+                temp = lower[31:20]; 
                 case(lower[14:12])
                         3'b000: opcode = "addiw";
                 endcase
@@ -167,7 +139,7 @@ begin
                         4'b0101: opcode = "srliw";
                         4'b1101: opcode = "sraiw";
                 endcase
-                $display ("%x:  %x              %s      %s,%s,%s%d", pc , lower,opcode,rd,rs1,sign,temp);
+                $display ("%x:  %x              %s      %s,%s,%d", pc , lower,opcode,rd,rs1,temp);
         end else begin
                 case (lower[6:0])
                        7'b0110111: begin
@@ -181,25 +153,18 @@ begin
                        7'b1101111: begin
                        gr_name.convert(lower[11:7],rd);
                        offset[20:0] = {lower[31],lower[19:12],lower[20],lower[30:21],1'b0};
-                       if(offset[20] == 1'b1) begin 
-                           offset = - offset;
-                           address = pc - offset;
-                       end else begin
-                           address = pc + offset;
-                       end
+                      // if(offset[20] == 1'b1) begin 
+                      //     offset = - offset;
+                      //     address = pc - offset;
+                      // end else begin
+                           address = pcint + offset;
                        $display ("%x:  %x              %s      %s,%x", pc , lower,"jal",rd,address);
                        end
                        7'b1100111: begin
                            gr_name.convert(lower[11:7],rd);
                            gr_name.convert(lower[19:15],rs1);
-                           if (lower[31] == 1'b1) begin
-                              sign = "-";
-                              temp  = - lower[31:20];
-                           end else begin
-                              temp  = lower[31:20];
-                              sign = " ";
-                           end
-                       $display ("%x:  %x              %s      %s,%s,%s%d", pc , lower,"jalr",rd,rs1,sign,temp);
+                           temp = lower[31:20];
+                       $display ("%x:  %x              %s      %s,%s,%d", pc , lower,"jalr",rd,rs1,temp);
                        end
                        default: $display("unknown at this time  ");
              endcase

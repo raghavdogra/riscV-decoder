@@ -14,7 +14,7 @@ module getreg();
         5: name = "t0";
         6: name = "t1";
         7: name = "t2";
-        8: name = "s0fp";
+        8: name = "s0";
         9: name = "s1";
        10: name = "a0";
        11: name = "a1";
