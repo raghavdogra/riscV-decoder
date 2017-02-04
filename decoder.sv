@@ -140,6 +140,33 @@ pcint = pc;
                         4'b1101: opcode = "sraiw";
                 endcase
                 $display ("%0x:  %x	%0s	%0s,%0s,%0d", pc , lower,opcode,rd,rs1,temp);
+        end else if (lower[6:0] == 7'b1110011) begin
+                gr_name.convert(lower[11:7],rd);
+                gr_name.convert(lower[19:15],rs1);
+               case(lower[14:12])
+                       3'b001: opcode = "csrrw";
+                       3'b010: opcode = "csrrs";
+                       3'b011: opcode = "csrrc";
+               endcase
+                $display ("%0x:	%x	%0s	%0s,csr,%0s", pc , lower,opcode,rd,rs1);
+		       
+        end else if (lower[6:0] == 7'b1110011) begin
+                gr_name.convert(lower[11:7],rd);
+               case(lower[14:12])
+		       3'b001: opcode = "csrrw";
+                       3'b001: opcode = "csrrw";
+                       3'b001: opcode = "csrrw";
+               endcase
+                $display ("%0x:	%x	%0s	%0s,csr,%0d", pc , lower,opcode,rd,lower[19:15]);
+        end else if (lower[31:0] == 32'b00000000000000000000000001110011) begin
+		$display ("ecall");
+        end else if (lower[31:0] == 32'b00000000000100000000000001110011) begin
+		$display ("ebreak");
+        end else if (lower[31:0] == 32'b00000000000000000001000000001111) begin
+		$display ("fence.i");
+        end else if (lower[31:0] == 32'b0000xxxxxxxx00000000000000001111) begin
+		$display ("fence");
+        end else if (lower[31:0] == 32'h00000000) begin
         end else begin
                 case (lower[6:0])
                        7'b0110111: begin
