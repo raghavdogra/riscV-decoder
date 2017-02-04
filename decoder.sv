@@ -97,7 +97,7 @@ pcint = pc;
                         3'b110: opcode = "bltu";
                         3'b111: opcode = "bgeu";
                endcase
-                $display ("%0x:  %x	%0s	%0s,%0s,%0x", pc , lower,opcode,rs1,rs2,address);
+                $display ("%0x:  %x	%0s	%0s,%0s,0x%0x", pc , lower,opcode,rs1,rs2,address);
         end else if (lower[6:0]  == 7'b0100011) begin
                 gr_name.convert(lower[19:15],rs1);
                 gr_name.convert(lower[24:20],rs2);
@@ -108,7 +108,7 @@ pcint = pc;
                         3'b010: opcode = "sw";
                         3'b011: opcode = "sd";
                 endcase
-                $display ("%0x:  %x	%0s	%0s,%0d,(%0s)", pc, lower,opcode,rs2,temp,rs1);
+                $display ("%0x:  %x	%0s	%0s,%0d(%0s)", pc, lower,opcode,rs2,temp,rs1);
 
          end else if (lower[6:0] == 7'b0111011) begin
                 gr_name.convert(lower[11:7],rd);
@@ -181,7 +181,7 @@ pcint = pc;
                        gr_name.convert(lower[11:7],rd);
                        offset[20:0] = {lower[31],lower[19:12],lower[20],lower[30:21],1'b0};
                        address = pcint + offset;
-                       $display ("%0x:  %x	%0s	%0s,%0x", pc , lower,"jal",rd,address);
+                       $display ("%0x:  %x	%0s	%0s,0x%0x", pc , lower,"jal",rd,address);
                        end
                        7'b1100111: begin
                            gr_name.convert(lower[11:7],rd);
