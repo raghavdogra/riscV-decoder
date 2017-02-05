@@ -230,4 +230,4 @@ fc:  00178793	addi	a5,a5,1
 388:  01813483	ld	s1,24(sp)
 38c:  03010113	addi	sp,sp,48
 390:  00008067	jalr	zero,ra,0
-- top.sv:60: Verilog $finish
+- top.sv:80: Verilog $finish
