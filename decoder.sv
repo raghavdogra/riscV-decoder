@@ -57,7 +57,23 @@ pcint = pc;
                         4'b0101: opcode = "srli";
                         4'b1101: opcode = "srai";
                 endcase
-                $display ("%0x:  %x	%0s	%0s,%0s,%0d", pc , lower,opcode,rd,rs1,temp);
+                if (opcode == "addi") begin
+                    if (temp == 0) begin
+                       opcode = "mv";
+                       if (rs1 == "zero") begin
+                          if (rd == "zero") begin
+                       $display("%0x:  %x	%0s", pc, lower,"nop");
+                          end else
+                       $display("%0x:  %x	%0s	%0s,0", pc, lower,"li",rd);
+                       end else
+                       $display("%0x:  %x	%0s	%0s,%0s", pc, lower,opcode,rd,rs1);
+                    end else if (rs1 == "zero") begin
+                       opcode = "li";
+                       $display("%0x:  %x	%0s	%0s,%0d", pc, lower,opcode,rd,temp);
+                     end else
+                       $display("%0x:  %x	%0s	%0s,%0s,%0d", pc, lower,opcode,rd,rs1,temp);
+                end  else
+                       $display("%0x:  %x	%0s	%0s,%0s,%0d", pc, lower,opcode,rd,rs1,temp);
 
         end else if (lower[6:0] == 7'b1110011) begin
                 gr_name.convert(lower[11:7],rd);
