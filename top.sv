@@ -43,10 +43,14 @@ module top
 	end
 	waiting: begin
 		if ({bus_reqack,bus_respcyc} == 2'bx1) begin
+			lower = bus_resp[UPPER_WIDTH - 1:0];
+			upper = bus_resp[BUS_DATA_WIDTH-1:UPPER_WIDTH];
 			next_state = reading;
 		end
 	end
 	reading: begin
+		lower = bus_resp[UPPER_WIDTH - 1:0];
+		upper = bus_resp[BUS_DATA_WIDTH-1:UPPER_WIDTH];
 		if ({bus_reqack,bus_respcyc} == 2'bx0) begin
 			npc = pc + 8'h40;
 			bus_req = npc;
@@ -71,8 +75,6 @@ module top
 			state <= request;
 		end else begin
 			if (next_state == reading) begin
-        			lower = bus_resp[UPPER_WIDTH - 1:0];
-        			upper = bus_resp[BUS_DATA_WIDTH-1:UPPER_WIDTH];
         			get_decoder.decode(lower, pc + data_index*4);
         			get_decoder.decode(upper, pc + (data_index + 1) * 4 );
         			if (upper == 32'h00000000) begin
