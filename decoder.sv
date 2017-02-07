@@ -76,18 +76,7 @@ pcint = pc;
                 end  else if (opcode == "slli" | opcode == "srli" | opcode == "srai" )
                        $display("%0x:  %x	%0s	%0s,%0s,0x%0x", pc, lower,opcode,rd,rs1,temp);
                 else 
-                       $display("%0x:  %x       %0s     %0s,%0s,%0d", pc, lower,opcode,rd,rs1,temp);
-        end else if (lower[6:0] == 7'b1110011) begin
-                gr_name.convert(lower[11:7],rd);
-                gr_name.convert(lower[19:15],rs1);
-                case (lower[14:12])
-                        3'b001: $display("%x:	%x		csrrw         %s,%s",pc,lower,rd,rs1 );
-                        3'b010: $display("%x:	%x		csrrs         %s,%s",pc,lower,rd,rs1);
-                        3'b011: $display("%x:	%x		csrrc         %s,%s",pc,lower,rd,rs1);
-                        3'b101: $display("%x:	%x		csrrwi        %s,%d",pc,lower,rd,lower[14:12]);
-                        3'b110: $display("%x:	%x		csrrsi        %s,%d",pc,lower,rd,lower[14:12]);
-                        3'b111: $display("%x:	%x		csrrci        %s,%d",pc,lower,rd,lower[14:12]);
-                endcase
+                       $display("%0x:  %x	%0s	%0s,%0s,%0d", pc, lower,opcode,rd,rs1,temp);
         end else if (lower[6:0] == 7'b0000011) begin
                 gr_name.convert(lower[11:7],rd);
                 gr_name.convert(lower[19:15],rs1);
@@ -160,7 +149,7 @@ pcint = pc;
                  if (opcode == "slliw" | opcode == "srliw" | opcode == "sraiw" )
                        $display("%0x:  %x	%0s	%0s,%0s,0x%0x", pc, lower,opcode,rd,rs1,temp);
                 else 
-                       $display("%0x:  %x       %0s     %0s,%0s,%0d", pc, lower,opcode,rd,rs1,temp);
+                       $display("%0x:  %x	%0s	%0s,%0s,%0d", pc, lower,opcode,rd,rs1,temp);
         end else if (lower[6:0] == 7'b1110011) begin
                 gr_name.convert(lower[11:7],rd);
                 gr_name.convert(lower[19:15],rs1);
