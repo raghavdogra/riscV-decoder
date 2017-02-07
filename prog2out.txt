@@ -32,7 +32,7 @@ c:  7f010413	addi	s0,sp,2032
 70:  00878793	addi	a5,a5,8
 74:  0007b783	ld	a5,0(a5)
 78:  0007c783	lbu	a5,0(a5)
-7c:  fd07879b	addiw     a5,a5,-48
+7c:  fd07879b	addiw	a5,a5,-48
 80:  fec42703	lw	a4,-20(s0)
 84:  00f707bb	addw	a5,a4,a5
 88:  fef42623	sw	a5,-20(s0)
@@ -63,7 +63,7 @@ e8:  00f707b3	add	a5,a4,a5
 ec:  7d000713	li	a4,2000
 f0:  42e7a023	sw	a4,1056(a5)
 f4:  fe842783	lw	a5,-24(s0)
-f8:  0017879b	addiw     a5,a5,1
+f8:  0017879b	addiw	a5,a5,1
 fc:  fef42423	sw	a5,-24(s0)
 100:  fe842703	lw	a4,-24(s0)
 104:  fec42783	lw	a5,-20(s0)
@@ -82,14 +82,14 @@ fc:  fef42423	sw	a5,-24(s0)
 138:  00f707b3	add	a5,a4,a5
 13c:  4207a703	lw	a4,1056(a5)
 140:  000027b7	lui	a5,0x2
-144:  7107879b	addiw     a5,a5,1808
+144:  7107879b	addiw	a5,a5,1808
 148:  02f707bb	mulw	a5,a4,a5
 14c:  fe042703	lw	a4,-32(s0)
 150:  00f707bb	addw	a5,a4,a5
 154:  fef42023	sw	a5,-32(s0)
 158:  fe842783	lw	a5,-24(s0)
 15c:  0017979b	slliw	a5,a5,0x1
-160:  fff7879b	addiw     a5,a5,-1
+160:  fff7879b	addiw	a5,a5,-1
 164:  fcf42c23	sw	a5,-40(s0)
 168:  fe042703	lw	a4,-32(s0)
 16c:  fd842783	lw	a5,-40(s0)
@@ -106,7 +106,7 @@ fc:  fef42423	sw	a5,-24(s0)
 198:  02f747bb	divw	a5,a4,a5
 19c:  fef42023	sw	a5,-32(s0)
 1a0:  fe842783	lw	a5,-24(s0)
-1a4:  fff7879b	addiw     a5,a5,-1
+1a4:  fff7879b	addiw	a5,a5,-1
 1a8:  fef42423	sw	a5,-24(s0)
 1ac:  fe842783	lw	a5,-24(s0)
 1b0:  00078c63	beq	a5,zero,0x1c8
@@ -118,7 +118,7 @@ fc:  fef42423	sw	a5,-24(s0)
 1c8:  00000013	nop
 1cc:  fe042703	lw	a4,-32(s0)
 1d0:  000027b7	lui	a5,0x2
-1d4:  7107879b	addiw     a5,a5,1808
+1d4:  7107879b	addiw	a5,a5,1808
 1d8:  02f7473b	divw	a4,a4,a5
 1dc:  fdc42783	lw	a5,-36(s0)
 1e0:  00f707bb	addw	a5,a4,a5
@@ -129,11 +129,11 @@ fc:  fef42423	sw	a5,-24(s0)
 1f4:  000300e7	jalr	ra,t1,0
 1f8:  fe042703	lw	a4,-32(s0)
 1fc:  000027b7	lui	a5,0x2
-200:  7107879b	addiw     a5,a5,1808
+200:  7107879b	addiw	a5,a5,1808
 204:  02f767bb	remw	a5,a4,a5
 208:  fcf42e23	sw	a5,-36(s0)
 20c:  fe442783	lw	a5,-28(s0)
-210:  ff27879b	addiw     a5,a5,-14
+210:  ff27879b	addiw	a5,a5,-14
 214:  fef42223	sw	a5,-28(s0)
 218:  fe442783	lw	a5,-28(s0)
 21c:  eef04ee3	blt	zero,a5,0x118

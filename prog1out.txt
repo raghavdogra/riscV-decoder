@@ -1,0 +1,22 @@
+cd obj_dir/ && ./Vtop /shared/cse502/tests/wp1/prog1.o
+Enabling waves...
+Initializing top, entry point = 0x0000000000000000
+0:  fe010113	addi	sp,sp,-32
+4:  00113c23	sd	ra,24(sp)
+8:  00813823	sd	s0,16(sp)
+c:  02010413	addi	s0,sp,32
+10:  fea42623	sw	a0,-20(s0)
+14:  feb43023	sd	a1,-32(s0)
+18:  000007b7	lui	a5,0x0
+1c:  00078513	mv	a0,a5
+20:  00000317	auipc	t1,0x0
+24:  000300e7	jalr	ra,t1,0
+28:  00000793	li	a5,0
+2c:  00078513	mv	a0,a5
+30:  01813083	ld	ra,24(sp)
+34:  01013403	ld	s0,16(sp)
+38:  02010113	addi	sp,sp,32
+3c:  00008067	jalr	zero,ra,0
+- top.sv:81: Verilog $finish
+- top.sv:84: Verilog $finish
+- top.sv:84: Second verilog $finish, exiting
