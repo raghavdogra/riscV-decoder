@@ -62,15 +62,15 @@ pcint = pc;
                        opcode = "mv";
                        if (rs1 == "zero") begin
                           if (rd == "zero") begin
-                       $display("%0x:  %x	%0s", pc, lower,"nop");
+                      		 $display("%0x:  %x	%0s", pc, lower,"nop");
                           end else
-                       $display("%0x:  %x	%0s	%0s,0", pc, lower,"li",rd);
+                      		 $display("%0x:  %x	%0s	%0s,0", pc, lower,"li",rd);
                        end else
-                       $display("%0x:  %x	%0s	%0s,%0s", pc, lower,opcode,rd,rs1);
+                                 $display("%0x:  %x	%0s	%0s,%0s", pc, lower,opcode,rd,rs1);
                     end else if (rs1 == "zero") begin
                        opcode = "li";
                        $display("%0x:  %x	%0s	%0s,%0d", pc, lower,opcode,rd,temp);
-                     end else
+                    end else
                        $display("%0x:  %x	%0s	%0s,%0s,%0d", pc, lower,opcode,rd,rs1,temp);
                 end  else
                        $display("%0x:  %x	%0s	%0s,%0s,%0d", pc, lower,opcode,rd,rs1,temp);
