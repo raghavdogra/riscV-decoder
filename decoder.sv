@@ -1,13 +1,13 @@
 `include "getreg.sv"
 module decoder();
 getreg gr_name();
+executer alu();
 
 task decode;
 input [31:0] lower;
 input [63:0] pc;
 logic [32:0] rd,rs1,rs2;
 logic [64:0] opcode;
-logic [7:0] sign;
 logic signed [11:0] temp;
 logic signed [12:0] temp_addr;
 logic signed [64:0] address;
@@ -39,7 +39,8 @@ pcint = pc;
                         5'b01110: opcode = "rem";
                         5'b01111: opcode = "remu";
                 endcase
-                $display ("%0x:  %x	%0s	%0s,%0s,%0s", pc, lower,opcode,rd,rs1,rs2);
+                alu.execute(opcode,lower[11:7],lower[19:15],lower[24:20],0);
+              //  $display ("%0x:  %x	%0s	%0s,%0s,%0s", pc, lower,opcode,rd,rs1,rs2);
         end else if (lower[6:0] == 7'b0010011) begin
                 gr_name.convert(lower[11:7],rd);
                 gr_name.convert(lower[19:15],rs1);
@@ -58,7 +59,9 @@ pcint = pc;
                         4'b0101: opcode = "srli";
                         4'b1101: opcode = "srai";
                 endcase
-                if (opcode == "addi") begin
+                alu.execute(opcode,lower[11:7],lower[19:15],0,temp);
+
+              /*  if (opcode == "addi") begin
                     if (temp == 0) begin
                        opcode = "mv";
                        if (rs1 == "zero") begin
@@ -76,7 +79,7 @@ pcint = pc;
                 end  else if (opcode == "slli" | opcode == "srli" | opcode == "srai" )
                        $display("%0x:  %x	%0s	%0s,%0s,0x%0x", pc, lower,opcode,rd,rs1,temp);
                 else 
-                       $display("%0x:  %x	%0s	%0s,%0s,%0d", pc, lower,opcode,rd,rs1,temp);
+                       $display("%0x:  %x	%0s	%0s,%0s,%0d", pc, lower,opcode,rd,rs1,temp);*/
         end else if (lower[6:0] == 7'b0000011) begin
                 gr_name.convert(lower[11:7],rd);
                 gr_name.convert(lower[19:15],rs1);
@@ -90,7 +93,9 @@ pcint = pc;
 			3'b011: opcode = "ld";
 			3'b110: opcode = "lwu";
                 endcase
-                $display ("%0x:  %x	%0s	%0s,%0d(%0s)", pc , lower,opcode,rd,temp,rs1);
+                alu.execute(opcode,lower[11:7],lower[19:15],0,temp);
+
+              //  $display ("%0x:  %x	%0s	%0s,%0d(%0s)", pc , lower,opcode,rd,temp,rs1);
         end else if (lower[6:0] == 7'b1100011) begin
                 gr_name.convert(lower[24:20],rs2);
                 gr_name.convert(lower[19:15],rs1);
@@ -104,7 +109,9 @@ pcint = pc;
                         3'b110: opcode = "bltu";
                         3'b111: opcode = "bgeu";
                endcase
-                $display ("%0x:  %x	%0s	%0s,%0s,0x%0x", pc , lower,opcode,rs1,rs2,address);
+              // alu.execute(opcode,0,lower[19:15],lower[24:20],0);
+
+//                $display ("%0x:  %x	%0s	%0s,%0s,0x%0x", pc , lower,opcode,rs1,rs2,address);
         end else if (lower[6:0]  == 7'b0100011) begin
                 gr_name.convert(lower[19:15],rs1);
                 gr_name.convert(lower[24:20],rs2);
@@ -115,6 +122,8 @@ pcint = pc;
                         3'b010: opcode = "sw";
                         3'b011: opcode = "sd";
                 endcase
+                alu.execute(opcode,0,lower[19:15],lower[24:20],temp);
+
                 $display ("%0x:  %x	%0s	%0s,%0d(%0s)", pc, lower,opcode,rs2,temp,rs1);
 
          end else if (lower[6:0] == 7'b0111011) begin
@@ -133,7 +142,9 @@ pcint = pc;
                         5'b01110: opcode = "remw";
                         5'b01111: opcode = "remuw";
                 endcase
-                $display ("%0x:  %x	%0s	%0s,%0s,%0s", pc, lower,opcode,rd,rs1,rs2);
+              alu.execute(opcode,lower[11:7],lower[19:15],lower[24:20],0);
+
+//                $display ("%0x:  %x	%0s	%0s,%0s,%0s", pc, lower,opcode,rd,rs1,rs2);
         end else if (lower[6:0] == 7'b0011011) begin
                 gr_name.convert(lower[11:7],rd);
                 gr_name.convert(lower[19:15],rs1);
@@ -146,10 +157,12 @@ pcint = pc;
                         4'b0101: opcode = "srliw";
                         4'b1101: opcode = "sraiw";
                 endcase
-                 if (opcode == "slliw" | opcode == "srliw" | opcode == "sraiw" )
-                       $display("%0x:  %x	%0s	%0s,%0s,0x%0x", pc, lower,opcode,rd,rs1,temp);
-                else 
-                       $display("%0x:  %x	%0s	%0s,%0s,%0d", pc, lower,opcode,rd,rs1,temp);
+                // if (opcode == "slliw" | opcode == "srliw" | opcode == "sraiw" )
+                   alu.execute(opcode,lower[11:7],lower[19:15],0,temp);
+
+               //        $display("%0x:  %x	%0s	%0s,%0s,0x%0x", pc, lower,opcode,rd,rs1,temp);
+               // else 
+                 //      $display("%0x:  %x	%0s	%0s,%0s,%0d", pc, lower,opcode,rd,rs1,temp);
         end else if (lower[6:0] == 7'b1110011) begin
                 gr_name.convert(lower[11:7],rd);
                 gr_name.convert(lower[19:15],rs1);
@@ -158,7 +171,9 @@ pcint = pc;
                        3'b010: opcode = "csrrs";
                        3'b011: opcode = "csrrc";
                endcase
-                $display ("%0x:	%x	%0s	%0s,csr,%0s", pc , lower,opcode,rd,rs1);
+             // alu.execute(opcode,lower[11:7],lower[19:15],0,0);
+
+               // $display ("%0x:	%x	%0s	%0s,csr,%0s", pc , lower,opcode,rd,rs1);
 		       
         end else if (lower[6:0] == 7'b1110011) begin
                 gr_name.convert(lower[11:7],rd);
@@ -167,7 +182,9 @@ pcint = pc;
                        3'b001: opcode = "csrrw";
                        3'b001: opcode = "csrrw";
                endcase
-                $display ("%0x:	%x	%0s	%0s,csr,%0d", pc , lower,opcode,rd,lower[19:15]);
+            //  alu.execute(opcode,lower[11:7],0,0,lower[19:15]);
+
+         /*       $display ("%0x:	%x	%0s	%0s,csr,%0d", pc , lower,opcode,rd,lower[19:15]);
         end else if (lower[31:0] == 32'b00000000000000000000000001110011) begin
 		$display ("ecall");
         end else if (lower[31:0] == 32'b00000000000100000000000001110011) begin
@@ -176,28 +193,34 @@ pcint = pc;
 		$display ("fence.i");
         end else if (lower[31:0] == 32'b0000xxxxxxxx00000000000000001111) begin
 		$display ("fence");
-        end else if (lower[31:0] == 32'h00000000) begin
-        end else begin
+        end else if (lower[31:0] == 32'h00000000) begin */
+        end 
+              else begin
                 case (lower[6:0])
                        7'b0110111: begin
                        gr_name.convert(lower[11:7],rd);
-                       $display("%0x:  %x	%0s	%0s,0x%0x",pc,lower,"lui",rd,lower[31:12]);
+                       alu.execute("lui",lower[11:7],0,0,lower[31:12]);
+                      // $display("%0x:  %x	%0s	%0s,0x%0x",pc,lower,"lui",rd,lower[31:12]);
                        end
                        7'b0010111:  begin
                        gr_name.convert(lower[11:7],rd);
-                       $display("%0x:  %x	%0s	%0s,0x%0x",pc,lower,"auipc",rd,lower[31:12]);
+                       alu.execute("auipc",lower[11:7],0,0,lower[31:12]);
+                      // alu.execute(opcode,lower[11:7],lower[19:15],lower[24:20],0);
+                      // $display("%0x:  %x	%0s	%0s,0x%0x",pc,lower,"auipc",rd,lower[31:12]);
                        end
                        7'b1101111: begin
                        gr_name.convert(lower[11:7],rd);
                        offset[20:0] = {lower[31],lower[19:12],lower[20],lower[30:21],1'b0};
                        address = pcint + offset;
-                       $display ("%0x:  %x	%0s	%0s,0x%0x", pc , lower,"jal",rd,address);
+                        alu.execute("jal",lower[11:7],0,0,address);
+                      // $display ("%0x:  %x	%0s	%0s,0x%0x", pc , lower,"jal",rd,address);
                        end
                        7'b1100111: begin
                            gr_name.convert(lower[11:7],rd);
                            gr_name.convert(lower[19:15],rs1);
                            temp = lower[31:20];
-                       $display ("%0x:  %x	%0s	%0s,%0s,%0d", pc , lower,"jalr",rd,rs1,temp);
+                        alu.execute("jalr",lower[11:7],lower[19:15],0,lower[31:12]);
+                      // $display ("%0x:  %x	%0s	%0s,%0s,%0d", pc , lower,"jalr",rd,rs1,temp);
                        end
                        default: $display("unknown at this time  ");
              endcase
