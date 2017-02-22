@@ -15,6 +15,9 @@ logic signed [64:0] pcint;
 logic signed [20:0] offset;
 begin
 pcint = pc;
+         if(lower[31:0] == 31'h00000000) begin 
+         	alu.printRegister;
+	end;	
          if (lower[6:0] == 7'b0110011) begin
                 gr_name.convert(lower[11:7],rd);
                 gr_name.convert(lower[19:15],rs1);
@@ -124,7 +127,7 @@ pcint = pc;
                 endcase
                 alu.execute(opcode,0,lower[19:15],lower[24:20],temp);
 
-                $display ("%0x:  %x	%0s	%0s,%0d(%0s)", pc, lower,opcode,rs2,temp,rs1);
+              //  $display ("%0x:  %x	%0s	%0s,%0d(%0s)", pc, lower,opcode,rs2,temp,rs1);
 
          end else if (lower[6:0] == 7'b0111011) begin
                 gr_name.convert(lower[11:7],rd);

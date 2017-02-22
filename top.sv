@@ -24,6 +24,7 @@ module top
   input  [BUS_TAG_WIDTH-1:0] bus_resptag
 );
   decoder get_decoder();
+
  
  logic [64:0] opcode;
   logic [63:0] pc;
@@ -78,7 +79,7 @@ module top
         			get_decoder.decode(lower, pc + data_index*4);
         			get_decoder.decode(upper, pc + (data_index + 1) * 4 );
         			if (upper == 32'h00000000) begin
-          				$finish;
+          				 $finish;
         			end
         			if (lower == 32'h00000000) begin
           				$finish;
