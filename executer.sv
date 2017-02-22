@@ -10,6 +10,21 @@ logic [63:0] gpr [31:0];
     begin
     
       gpr[rd] = immediate;
+	case(opcode)
+		"add": begin
+			$display("add instruction");
+			end
+		"mv": begin
+			$display("mv instruction");
+			end
+		"addi": begin
+			$display("addi instruction");
+			end
+//		default: begin
+//			$display("not add or mv");
+//		end
+	endcase
+
    //    for (int i=0; i<=31; i++) begin
      //   $display ("%0d",gpr[i] );
      //  end 
