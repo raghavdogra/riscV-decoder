@@ -29,7 +29,15 @@ logic signed [63:0] gpr [31:0];
 			temp = {immediate,3'h000};
                         gpr[rd] = pc + temp;
                         end
-                
+ 		"jal": begin 
+			temp = pc + immediate + 4;
+                        gpr[rd] = temp;
+			end
+		"jalr": begin
+			temp = gpr[rs1] + immediate;
+			temp[0] = 0;
+ 			gpr[rd] = temp + 4;
+                	end
 //		default: begin
 //			$display("not add or mv");
 //		end
