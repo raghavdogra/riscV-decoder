@@ -8,21 +8,54 @@ logic signed [63:0] gpr [31:0];
     input [5:0] rd;
     input [5:0] rs1;
     input [5:0] rs2;
-    input [64:0] pc;
     input signed [19:0] immediate;
+    input [64:0] pc;
    // output [4*8:0] name;
     begin
     
       gpr[rd] = immediate;
 	case(opcode)
 		"add": begin
-			$display("add instruction");
+			gpr[rd] = gpr[rs1] + gpr[rs2];
 			end
-		"mv": begin
-			$display("mv instruction");
+		"addw": begin
+			gpr[rd] = gpr[rs1] + gpr[rs2];
+			end
+		"xor": begin
+			gpr[rd] = gpr[rs1] ^ gpr[rs2];
+			end
+		"or": begin
+			gpr[rd] = gpr[rs1] | gpr[rs2];
+			end
+		"and": begin
+			gpr[rd] = gpr[rs1] & gpr[rs2];
 			end
 		"addi": begin
-			$display("addi instruction");
+			gpr[rd] = gpr[rs1] + immediate;
+			end
+		"addiw": begin
+			gpr[rd] = gpr[rs1] + immediate;
+			end
+		"sub": begin
+			gpr[rd] = gpr[rs1] - gpr[rs2];
+			end
+		"subw": begin
+			gpr[rd] = gpr[rs1] - gpr[rs2];
+			end
+		"slti": begin
+			if (gpr[rs1] < immediate)
+				gpr[rd] = 1;
+			else
+				gpr[rd] = 0;
+			end
+		"andi": begin
+			gpr[rd] = gpr[rs1] & immediate;
+			end
+		"xori": begin
+			gpr[rd] = gpr[rs1] ^ immediate;
+			end
+		"ori": begin
+			gpr[rd] = gpr[rs1] | immediate;
 			end
   		"lui": begin
 			gpr[rd] = {immediate,3'h0000};
@@ -41,7 +74,7 @@ logic signed [63:0] gpr [31:0];
  			gpr[rd] = temp + 4;
                 	end
 		"slli": begin
-			gpr[rd] = gpr[rs1] << immmediate[4:0];
+			gpr[rd] = gpr[rs1] << immediate[4:0];
 			end
 		"srli": begin
 			gpr[rd] = gpr[rs1] >> immediate[4:0];
@@ -56,7 +89,7 @@ logic signed [63:0] gpr [31:0];
 			gpr[rd] = temp;
 			end
 		"slliw": begin
-                        gpr[rd] = gpr[rs1] << immmediate[4:0];
+                        gpr[rd] = gpr[rs1] << immediate[4:0];
                         end
                 "srliw": begin
                         gpr[rd] = gpr[rs1] >> immediate[4:0];
@@ -75,7 +108,6 @@ logic signed [63:0] gpr [31:0];
 //			$display("not add or mv");
 //		end
 	endcase
-
    //    for (int i=0; i<=31; i++) begin
      //   $display ("%0d",gpr[i] );
      //  end 
