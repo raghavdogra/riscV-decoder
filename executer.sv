@@ -2,6 +2,8 @@ module executer();
 logic signed [63:0] gpr [31:0];
   task execute;
     logic signed [64:0] temp;
+    logic bt;
+    int x;
     input [64:0] opcode;
     input [5:0] rd;
     input [5:0] rs1;
@@ -38,6 +40,37 @@ logic signed [63:0] gpr [31:0];
 			temp[0] = 0;
  			gpr[rd] = temp + 4;
                 	end
+		"slli": begin
+			gpr[rd] = gpr[rs1] << immmediate[4:0];
+			end
+		"srli": begin
+			gpr[rd] = gpr[rs1] >> immediate[4:0];
+			end
+		"srai": begin
+			temp = gpr[rs1];
+			bt = temp[64];
+			temp = temp >> immediate[4:0];
+ 			for (int i=64; i > (64-x); i--) begin
+					temp[i] = bt;
+				end
+			gpr[rd] = temp;
+			end
+		"slliw": begin
+                        gpr[rd] = gpr[rs1] << immmediate[4:0];
+                        end
+                "srliw": begin
+                        gpr[rd] = gpr[rs1] >> immediate[4:0];
+                        end
+                "sraiw": begin
+                        temp = gpr[rs1];
+                        bt = temp[64];
+                        temp = temp >> immediate[4:0];
+                        for (int i=64; i > (64-x); i--) begin
+                       			 temp[i] = bt;
+                       	 	end
+                        gpr[rd] = temp;
+			end
+		
 //		default: begin
 //			$display("not add or mv");
 //		end
