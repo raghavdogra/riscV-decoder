@@ -1,15 +1,17 @@
 module executer();
 logic signed [63:0] gpr [31:0];
   task execute;
-    logic signed [64:0] temp;
-    logic bt;
-    int x;
     input [64:0] opcode;
     input [5:0] rd;
     input [5:0] rs1;
     input [5:0] rs2;
     input signed [19:0] immediate;
     input [64:0] pc;
+    logic [63:0] abs;
+    logic [63:0] abs1;
+    logic signed [64:0] temp;
+    logic bt;
+    int x;
    // output [4*8:0] name;
     begin
     
@@ -103,7 +105,43 @@ logic signed [63:0] gpr [31:0];
                        	 	end
                         gpr[rd] = temp;
 			end
-		
+		"rem":  begin
+                        gpr[rd] = gpr[rs1] % gpr[rs2];
+                        end
+                "remu": begin
+                        getAbs(gpr[rs1], abs);
+                        getAbs(gpr[rs2], abs1);
+                        gpr[rd] = abs % abs1;
+                        end
+                "remw":  begin
+                        gpr[rd] = gpr[rs1] % gpr[rs2];
+                        end
+                "remuw": begin
+                        getAbs(gpr[rs1], abs);
+                        getAbs(gpr[rs2], abs1);
+                        gpr[rd] = abs / abs1;
+                        end
+                "div":  begin
+                        gpr[rd] = gpr[rs1] / gpr[rs2];
+                        end
+                "divu": begin
+                        getAbs(gpr[rs1], abs);
+                        getAbs(gpr[rs2], abs1);
+                        gpr[rd] = abs / abs1;
+                        end
+                "divw":  begin
+                        gpr[rd] = gpr[rs1] / gpr[rs2];
+                        end
+                "divuw": begin
+                        getAbs(gpr[rs1], abs);
+                        getAbs(gpr[rs2], abs1);
+                        gpr[rd] = abs / abs1;
+                        end
+		"mul":	 gpr[rd] = gpr[rs1] * gpr[rs2];
+		"mulw":  gpr[rd]	= gpr[rs1] * gpr[rs2];
+	//	"muli":  gpr[rd] = gpr[rs1] * immediate;
+	//	"muliw": gpr[rd] = gpr[rs1] * immediate;
+
 //		default: begin
 //			$display("not add or mv");
 //		end
@@ -124,6 +162,16 @@ logic signed [63:0] gpr [31:0];
         $display ("%0d",gpr[i] );
        end
   endtask;
+
+task getAbs;
+	input [63:0] signd;
+	output [63:0] abs;
+
+	if(signd[63] == 1) 
+		abs = -signd;
+	else if(signd[63] == 0)
+		abs = signd;
+endtask;
 
 endmodule
 
