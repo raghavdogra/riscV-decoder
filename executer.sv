@@ -1,4 +1,5 @@
 module executer();
+getreg gr_name();
 logic signed [63:0] gpr [31:0];
   task execute;
     input [64:0] opcode;
@@ -12,10 +13,11 @@ logic signed [63:0] gpr [31:0];
     logic signed [64:0] temp;
     logic bt;
     int x;
+    logic [32:0] name;
    // output [4*8:0] name;
     begin
-    
-      gpr[rd] = immediate;
+     gpr[0] = 0; 
+    //  gpr[rd] = immediate;
 	case(opcode)
 		"add": begin
 			gpr[rd] = gpr[rs1] + gpr[rs2];
@@ -139,6 +141,7 @@ logic signed [63:0] gpr [31:0];
                         end
 		"mul":	 gpr[rd] = gpr[rs1] * gpr[rs2];
 		"mulw":  gpr[rd]	= gpr[rs1] * gpr[rs2];
+
 	//	"muli":  gpr[rd] = gpr[rs1] * immediate;
 	//	"muliw": gpr[rd] = gpr[rs1] * immediate;
 
@@ -152,14 +155,18 @@ logic signed [63:0] gpr [31:0];
     //  $display ("%0s,%0x,%0x,%0x, %0d",opcode,rd,rs1,rs2, immediate);
    
     end
- 
+	gr_name.convert(rd,name);
+        $display ("%0s\t%0s\t => %0d",opcode,name,gpr[rd]);
+
  
   endtask;
 
  task printRegister;
+logic [32:0] name;
  //    gpr[rd] = immediate;
        for (int i=0; i<=31; i++) begin
-        $display ("%0d",gpr[i] );
+        gr_name.convert(i,name);
+	$display ("%0s => %0d",name,gpr[i]);
        end
   endtask;
 
