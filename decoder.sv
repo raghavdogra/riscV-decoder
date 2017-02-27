@@ -215,17 +215,17 @@ pcint = pc;
                        gr_name.convert(lower[11:7],rd);
                        offset[20:0] = {lower[31],lower[19:12],lower[20],lower[30:21],1'b0};
                        address = pcint + offset;
-                        alu.execute("jal",lower[11:7],0,0,address,pcint);
+                      //  alu.execute("jal",lower[11:7],0,0,address,pcint);
                       // $display ("%0x:  %x	%0s	%0s,0x%0x", pc , lower,"jal",rd,address);
                        end
                        7'b1100111: begin
                            gr_name.convert(lower[11:7],rd);
                            gr_name.convert(lower[19:15],rs1);
                            temp = lower[31:20];
-                        alu.execute("jalr",lower[11:7],lower[19:15],0,lower[31:12],pcint);
+                      //  alu.execute("jalr",lower[11:7],lower[19:15],0,lower[31:12],pcint);
                       // $display ("%0x:  %x	%0s	%0s,%0s,%0d", pc , lower,"jalr",rd,rs1,temp);
                        end
-                       default: $display("unknown at this time  ");
+                       default: $display("");
              endcase
         end
      end

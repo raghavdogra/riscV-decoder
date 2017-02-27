@@ -156,7 +156,7 @@ logic signed [63:0] gpr [31:0];
    
     end
 	gr_name.convert(rd,name);
-        $display ("%0s\t%0s\t => %0d",opcode,name,gpr[rd]);
+//        $display ("%0s\t%0s\t => %0d",opcode,name,gpr[rd]);
 
  
   endtask;
@@ -166,7 +166,7 @@ logic [32:0] name;
  //    gpr[rd] = immediate;
        for (int i=0; i<=31; i++) begin
         gr_name.convert(i,name);
-	$display ("%0s => %0d",name,gpr[i]);
+	$display ("%0s	%x	%0d",name,gpr[i],gpr[i]);
        end
   endtask;
 

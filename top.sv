@@ -76,9 +76,14 @@ module top
 			state <= request;
 		end else begin
 			if (next_state == reading) begin
+        			if (upper == 32'h00000000 && lower == 32'h00000000)
+        				get_decoder.decode(lower, pc + data_index*4);
+				else begin
         			get_decoder.decode(lower, pc + data_index*4);
         			get_decoder.decode(upper, pc + (data_index + 1) * 4 );
-        			if (upper == 32'h00000000) begin
+        			end
+				
+				if (upper == 32'h00000000) begin
           				 $finish;
         			end
         			if (lower == 32'h00000000) begin
