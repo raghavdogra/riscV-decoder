@@ -8,10 +8,12 @@ logic signed [63:0] gpr [31:0];
     input [5:0] rs2;
     input signed [19:0] immediate;
     input [64:0] pc;
-    logic [63:0] abs;
-    logic [63:0] abs1;
+    logic signed [63:0] abs;
+    logic signed [63:0] abs1;
     logic signed [64:0] temp;
     logic [63:0] temp1;
+    logic [127:0] unsign128;
+    logic signed [127:0] sign128;
 
     logic bt;
     int x;
@@ -204,19 +206,19 @@ logic signed [63:0] gpr [31:0];
 		"mulw":  gpr[rd] = gpr[rs1] * gpr[rs2];
 
 		"mulh": begin
-			temp = gpr[rs1] * gpr[rs2];
-			gpr[rd] = temp[63:32];
+			sign128 = gpr[rs1] * gpr[rs2];
+			gpr[rd] = sign128[127:64];
 			end
 		"mulhsu":begin
                          getAbs(gpr[rs2], abs1);
-                         temp = gpr[rs1] * abs1;
-                         gpr[rd] = temp[63:32];
+                         sign128 = gpr[rs1] * abs1;
+                         gpr[rd] = sign128[127:64];
 			end
 		"mulhu": begin
 			 getAbs(gpr[rs1], abs);
                          getAbs(gpr[rs2], abs1);
-			 temp = abs * abs1;
-			 gpr[rd] = temp[63:32];
+			 unsign128 = abs * abs1;
+			 gpr[rd] = unsign128[127:64];
 			 end
 //		default: begin
 //			$display("not add or mv");
