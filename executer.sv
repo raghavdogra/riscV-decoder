@@ -14,6 +14,7 @@ logic signed [63:0] gpr [31:0];
     logic [63:0] temp1;
     logic [127:0] unsign128;
     logic signed [127:0] sign128;
+    logic signed [31:0] sign32 [3:0];
 
     logic bt;
     int x;
@@ -27,7 +28,10 @@ logic signed [63:0] gpr [31:0];
 			gpr[rd] = gpr[rs1] + gpr[rs2];
 			end
 		"addw": begin
-			gpr[rd] = gpr[rs1] + gpr[rs2];
+			sign32[0] = gpr[rs1];
+                        sign32[1] = gpr[rs2];
+                        sign32[2] = sign32[0] + sign32[1];
+                        gpr[rd] = sign32[2];
 			end
 		"xor": begin
 			gpr[rd] = gpr[rs1] ^ gpr[rs2];
@@ -42,13 +46,17 @@ logic signed [63:0] gpr [31:0];
 			gpr[rd] = gpr[rs1] + immediate;
 			end
 		"addiw": begin
-			gpr[rd] = gpr[rs1] + immediate;
+                        sign32[0] = gpr[rs1] + immediate;
+                        gpr[rd] = sign32[0];
 			end
 		"sub": begin
 			gpr[rd] = gpr[rs1] - gpr[rs2];
 			end
 		"subw": begin
-			gpr[rd] = gpr[rs1] - gpr[rs2];
+                        sign32[0] = gpr[rs1];
+                        sign32[1] = gpr[rs2];
+                        sign32[2] = sign32[0] - sign32[1];
+                        gpr[rd] = sign32[2];
 			end
 		"slti": begin
 			if (gpr[rs1] < immediate)
@@ -121,10 +129,14 @@ logic signed [63:0] gpr [31:0];
 			gpr[rd] = temp;
 			end
 		"slliw": begin
-                        gpr[rd] = gpr[rs1] << immediate[4:0];
+                        sign32[0] = gpr[rs1];
+                        sign32[1] = sign32[0] << immediate[4:0];
+                        gpr[rd] = sign32[1];
                         end
                 "srliw": begin
-                        gpr[rd] = gpr[rs1] >> immediate[4:0];
+                        sign32[0] = gpr[rs1];
+                        sign32[1] = sign32[0] >> immediate[4:0];
+                        gpr[rd] = sign32[1];
                         end
                 "sraiw": begin
                         temp = gpr[rs1];
@@ -179,12 +191,18 @@ logic signed [63:0] gpr [31:0];
                         gpr[rd] = abs % abs1;
                         end
                 "remw":  begin
-                        gpr[rd] = gpr[rs1] % gpr[rs2];
+			sign32[0] = gpr[rs1];
+                        sign32[1] = gpr[rs2];
+                        sign32[2] = sign32[0] % sign32[1];
+                        gpr[rd] = sign32[2];
                         end
                 "remuw": begin
-                        getAbs(gpr[rs1], abs);
-                        getAbs(gpr[rs2], abs1);
-                        gpr[rd] = abs / abs1;
+			sign32[0] = gpr[rs1];
+                        sign32[1] = gpr[rs2];
+                        getAbs(sign32[0], abs);
+                        getAbs(sign32[1], abs1);
+			sign32[2] = abs % abs1;
+                        gpr[rd] = sign32[2];
                         end
                 "div":  begin
                         gpr[rd] = gpr[rs1] / gpr[rs2];
@@ -195,16 +213,26 @@ logic signed [63:0] gpr [31:0];
                         gpr[rd] = abs / abs1;
                         end
                 "divw":  begin
-                        gpr[rd] = gpr[rs1] / gpr[rs2];
+			sign32[0] = gpr[rs1];
+                        sign32[1] = gpr[rs2];
+                        sign32[2] = sign32[0] / sign32[1];
+                        gpr[rd] = sign32[2];
                         end
                 "divuw": begin
-                        getAbs(gpr[rs1], abs);
-                        getAbs(gpr[rs2], abs1);
-                        gpr[rd] = abs / abs1;
+			sign32[0] = gpr[rs1];
+                        sign32[1] = gpr[rs2];
+                        getAbs(sign32[0], abs);
+                        getAbs(sign32[1], abs1);
+			sign32[2] = abs / abs1;
+                        gpr[rd] = sign32[2];
                         end
 		"mul":	 gpr[rd] = gpr[rs1] * gpr[rs2];
-		"mulw":  gpr[rd] = gpr[rs1] * gpr[rs2];
-
+		"mulw": begin
+			sign32[0] = gpr[rs1];
+                        sign32[1] = gpr[rs2];
+                        sign32[2] = sign32[0] * sign32[1];
+                        gpr[rd] = sign32[2];
+			end
 		"mulh": begin
 			sign128 = gpr[rs1] * gpr[rs2];
 			gpr[rd] = sign128[127:64];
