@@ -10,7 +10,7 @@ logic signed [63:0] gpr [31:0];
     input [64:0] pc;
     logic signed [63:0] abs;
     logic signed [63:0] abs1;
-    logic signed [64:0] temp;
+    logic signed [63:0] temp;
     logic [63:0] temp1;
     logic [127:0] unsign128;
     logic signed [127:0] sign128;
@@ -121,9 +121,9 @@ logic signed [63:0] gpr [31:0];
 			end
 		"srai": begin
 			temp = gpr[rs1];
-			bt = temp[64];
+			bt = temp[63];
 			temp = temp >> immediate[4:0];
- 			for (int i=64; i > (64-x); i--) begin
+ 			for (int i=63; i > (63-x); i--) begin
 					temp[i] = bt;
 				end
 			gpr[rd] = temp;
@@ -139,14 +139,14 @@ logic signed [63:0] gpr [31:0];
                         gpr[rd] = sign32[1];
                         end
                 "sraiw": begin
-                        temp = gpr[rs1];
-                        bt = temp[64];
+                        sign32[0] = gpr[rs1];
+                        bt = sign32[0][31];
 			x = immediate[4:0];
-                        temp = temp >> immediate[4:0];
-                        for (int i=64; i > (64-x); i--) begin
-                       			 temp[i] = bt;
+                        sign32[1] = sign32[0] >> immediate[4:0];
+                        for (int i=31; i > (31-x); i--) begin
+                       			 sign32[1][i] = bt;
                        	 	end
-                        gpr[rd] = temp;
+                        gpr[rd] = sign32[1];
 			end
                "sll": begin
                         gpr[rd] = gpr[rs1] << gpr[rs2][4:0];
@@ -156,11 +156,11 @@ logic signed [63:0] gpr [31:0];
                         end
                 "sra": begin
                         temp = gpr[rs1];
-                        bt = temp[64];
-			x = gpr[rs2];
+                        bt = temp[63];
+			x = gpr[rs2][4:0];
 			temp1 = gpr[rs2];
                         temp = temp >> temp1[4:0];
-                        for (int i=64; i > (64-x); i--) begin
+                        for (int i=63; i > (63-x); i--) begin
                                         temp[i] = bt;
                                 end
                         gpr[rd] = temp;
@@ -176,18 +176,18 @@ logic signed [63:0] gpr [31:0];
                         sign32[1] = gpr[rs2];
                         sign32[2] = sign32[0] >> sign32[1][4:0];
                         gpr[rd] = sign32[2];
-                        gpr[rd] = gpr[rs1] >> gpr[rs2];
+                      //  gpr[rd] = gpr[rs1] >> gpr[rs2];
                         end
                 "sraw": begin
-                        temp = gpr[rs1];
-                        bt = temp[64];
-			x = gpr[rs2];
-			temp1 = gpr[rs2];
-                        temp = temp >> temp1[4:0];
-                        for (int i=64; i > (64-x); i--) begin
-                                         temp[i] = bt;
+                        sign32[0] = gpr[rs1];
+                        bt = sign32[0][31];
+			sign32[1] = gpr[rs2];
+			x = sign32[1][4:0];
+                        sign32[2] = sign32[0] >> sign32[1][4:0];
+                        for (int i=31; i > (31-x); i--) begin
+                                         sign32[2][i] = bt;
                                 end
-                        gpr[rd] = temp;
+                        gpr[rd] = sign32[2];
                         end
 		"rem":  begin
                         gpr[rd] = gpr[rs1] % gpr[rs2];
