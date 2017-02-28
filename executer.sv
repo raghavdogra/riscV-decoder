@@ -98,7 +98,7 @@ logic signed [63:0] gpr [31:0];
 			gpr[rd] = gpr[rs1] | immediate;
 			end
   		"lui": begin
-			gpr[rd] = {immediate,3'h0000};
+			gpr[rd] = {immediate,3'h000};
                         end
 		"auipc": begin
 			temp = {immediate,3'h000};
@@ -122,6 +122,7 @@ logic signed [63:0] gpr [31:0];
 		"srai": begin
 			temp = gpr[rs1];
 			bt = temp[63];
+			x = immediate[4:0];
 			temp = temp >> immediate[4:0];
  			for (int i=63; i > (63-x); i--) begin
 					temp[i] = bt;
