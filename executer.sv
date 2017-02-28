@@ -149,10 +149,10 @@ logic signed [63:0] gpr [31:0];
                         gpr[rd] = temp;
 			end
                "sll": begin
-                        gpr[rd] = gpr[rs1] << gpr[rs2];
+                        gpr[rd] = gpr[rs1] << gpr[rs2][4:0];
                         end
                 "srl": begin
-                        gpr[rd] = gpr[rs1] >> gpr[rs2];
+                        gpr[rd] = gpr[rs1] >> gpr[rs2][4:0];
                         end
                 "sra": begin
                         temp = gpr[rs1];
@@ -166,9 +166,16 @@ logic signed [63:0] gpr [31:0];
                         gpr[rd] = temp;
                         end
                 "sllw": begin
-                        gpr[rd] = gpr[rs1] << gpr[rs2];
+			sign32[0] = gpr[rs1];
+                        sign32[1] = gpr[rs2];
+                        sign32[2] = sign32[0] << sign32[1][4:0];
+                        gpr[rd] = sign32[2];
                         end
                 "srlw": begin
+			sign32[0] = gpr[rs1];
+                        sign32[1] = gpr[rs2];
+                        sign32[2] = sign32[0] >> sign32[1][4:0];
+                        gpr[rd] = sign32[2];
                         gpr[rd] = gpr[rs1] >> gpr[rs2];
                         end
                 "sraw": begin
